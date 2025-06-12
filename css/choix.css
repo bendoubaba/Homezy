@@ -1,0 +1,132 @@
+/* Importation des icônes FontAwesome */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+  /*  background-image: url('https://i.pinimg.com/236x/e1/5a/09/e15a098e53a309e7b8911aeb15af089a.jpg');
+    background-repeat: no-repeat; /* Fixed comment syntax */
+    background-position: center ;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: #130802;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+header nav ul li a:hover,
+header nav ul li a.active {
+    color: #FF9F1C;
+}
+header {
+    background-color: teal;
+    color: white;
+    padding: 15px;
+    font-size: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    background-color: #ffffff; /* Soft orange for a welcoming vibe */
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+header .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ef325e; /* Vibrant pink for a standout brand name */
+}
+
+
+
+.circle {
+    
+    width: 100px;
+    height: 100px;
+    background-color: rgba(0, 139, 139, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.circle i {
+    
+    font-size: 40px;
+    color: #ef325e;
+}
+h1 {padding-top: 10px;
+    color: #241a1c;
+    margin-top: 20px;
+}
+
+h4 {
+   
+    color: #241a1c;
+    margin-top: 20px;
+}
+
+p {
+    color: #481919;
+}
+
+.role-button {
+    display: flex;
+    align-items: center;
+    background-color: #ef325e;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 400px;
+    margin: 10px auto;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.role-button i {
+    font-size: 30px;
+    margin-right: 15px;
+}
+
+.role-button div {
+    text-align: left;
+}
+
+.role-button:hover {
+    background-color: #ef325e;
+}
+
+/* Animation de fondu */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 1s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+footer {
+    text-align: center;
+    padding: 80px;
+  
+    color: white;
+    margin-top: 30px;
+}
