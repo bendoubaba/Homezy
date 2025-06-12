@@ -1,0 +1,273 @@
+<?php
+session_start();
+
+
+
+// كلمة مرور سريّة للوصول إلى لوحة التحكم
+$admin_secret_key = 'yoursecretkey123'; // غيّرها إلى كلمة مرور سرية قوية
+
+// التحقق من الرابط السري أو كلمة المرور في الرابط
+if (!isset($_GET['admin_key']) || $_GET['admin_key'] !== $admin_secret_key) {
+   echo "إنت غير مصرح لك بالدخول.";
+   exit();
+}
+
+include __DIR__ . '/../db/db.php';
+
+
+$servicesQuery = $conn->query("SELECT * FROM services");
+$services = $servicesQuery->fetchAll(PDO::FETCH_ASSOC);
+
+$subcategoriesQuery = $conn->query("SELECT sous_services.*, services.nom_service FROM sous_services 
+                                    JOIN services ON sous_services.id_service = services.id");
+$subcategories = $subcategoriesQuery->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<style>
+/* إعادة تعيين القيم الافتراضية لجميع العناصر */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+nav {
+    background-color: #333;
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: flex-end;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: #28a745;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #28a745;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+form {
+    margin-bottom: 30px;
+}
+
+form label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+form input, form select {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+form button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #218838;
+}
+
+ul {
+    list-style-type: none;
+}
+
+ul li {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul li a {
+    text-decoration: none;
+    color: #28a745;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+ul li a:hover {
+    color: #218838;
+}
+
+ul li a:first-child {
+    margin-left: 0;
+}
+
+ul li:last-child {
+    margin-bottom: 0;
+}
+
+/* تعديل في عرض الجداول والأزرار */
+ul li button {
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+ul li button:hover {
+    background-color: #c82333;
+}
+
+/* تعليقات و ملاحظات على التنقل في الصفحة */
+.redirect {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.redirect a {
+    color: #28a745;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.redirect a:hover {
+    text-decoration: underline;
+}
+
+</style>
+
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="admin_dashboard.php?admin_key=<?= $admin_secret_key ?>">لوحة التحكم</a></li>
+            <li><a href="logout.php">تسجيل الخروج</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>لوحة التحكم</h1>
+
+        <!-- إضافة خدمة جديدة -->
+        <h2>إضافة خدمة جديدة</h2>
+        <form action="add_service.php" method="POST">
+            <label for="service_name">اسم الخدمة:</label>
+            <input type="text" name="service_name" id="service_name" required>
+            <button type="submit">إضافة الخدمة</button>
+        </form>
+
+        <!-- إضافة Subcategory جديدة -->
+        <h2>إضافة Subcategory جديدة</h2>
+        <form action="add_subcategory.php" method="POST">
+            <label for="subcategory_name">اسم Subcategory:</label>
+            <input type="text" name="subcategory_name" id="subcategory_name" required>
+
+            <label for="service_id">اختر الخدمة:</label>
+            <select name="service_id" id="service_id">
+                <?php while ($service = $servicesQuery->fetch(PDO::FETCH_ASSOC)): ?>
+                    <option value="<?= $service['id'] ?>"><?= $service['nom_service'] ?></option>
+                <?php endwhile; ?>
+            </select>
+
+            <button type="submit">إضافة Subcategory</button>
+        </form>
+
+        <!-- إدارة الخدمات و subcategories -->
+        <h2>إدارة الخدمات و Subcategories</h2>
+
+        <h3>الخدمات</h3>
+        <ul>
+            <?php if (!empty($services)): ?>
+                <?php foreach ($services as $service): ?>
+                    <li>
+                        <?= htmlspecialchars($service['nom_service']) ?>
+                        <a href="edit_service.php?id=<?= $service['id'] ?>&admin_key=<?= $admin_secret_key ?>">تعديل</a>
+                        <a href="delete_service.php?id=<?= $service['id'] ?>&admin_key=<?= $admin_secret_key ?>">حذف</a>
+                    </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li>لا توجد خدمات حالياً.</li>
+            <?php endif; ?>
+        </ul>
+
+
+
+        <h3>Subcategories</h3>
+        <ul>
+            <?php foreach ($subcategories as $subcategory): ?>
+                <li>
+                    <?= $subcategory['nom_sous_service'] ?> (<?= $subcategory['nom_service'] ?>)
+                    <a href="edit_subcategory.php?id=<?= $subcategory['id'] ?>&admin_key=<?= $admin_secret_key ?>">تعديل</a>
+                    <a href="delete_subcategory.php?id=<?= $subcategory['id'] ?>&admin_key=<?= $admin_secret_key ?>">حذف</a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</body>
+</html>
